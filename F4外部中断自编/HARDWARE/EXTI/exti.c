@@ -18,14 +18,14 @@ void EXTIX_Init()
 	NVIC_InitTypeDef NVIC_InitStruct;
 	
 	
-	KEY_Init();   //设置E2 E3 IO口 均为高电平
+	KEY_Init();   //设置E0 E1 IO口 均为高电平
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE );//使能SYSCFG时钟
 	
-	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE,EXTI_PinSource2);//E2映射到中断线2
-	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE,EXTI_PinSource3);//E3映射到中断线3
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE,EXTI_PinSource0);//E0映射到中断线0
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE,EXTI_PinSource1);//E1映射到中断线1
 	
 	
-	EXTI_InitStruct.EXTI_Line=EXTI_Line3 | EXTI_Line2;  //初始中断线2，3
+	EXTI_InitStruct.EXTI_Line=EXTI_Line0 | EXTI_Line1;  //初始中断线0 1
 	EXTI_InitStruct.EXTI_LineCmd=ENABLE; //使能
 	EXTI_InitStruct.EXTI_Mode=EXTI_Mode_Interrupt;//触发中断
 	EXTI_InitStruct.EXTI_Trigger=EXTI_Trigger_Falling;//下降沿
@@ -34,7 +34,7 @@ void EXTIX_Init()
 	
 	
 		
-	NVIC_InitStruct.NVIC_IRQChannel=EXTI2_IRQn;     //中断服务2通道
+	NVIC_InitStruct.NVIC_IRQChannel=EXTI0_IRQn;     //中断服务0通道
 	NVIC_InitStruct.NVIC_IRQChannelCmd=ENABLE;			//使能
 	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority=1;//抢占优先级
 	NVIC_InitStruct.NVIC_IRQChannelSubPriority=1;//响应优先级
@@ -45,7 +45,7 @@ void EXTIX_Init()
 	
 	
 	
-	NVIC_InitStruct.NVIC_IRQChannel=EXTI3_IRQn;//中断服务3通道
+	NVIC_InitStruct.NVIC_IRQChannel=EXTI1_IRQn;//中断服务1通道
 	NVIC_InitStruct.NVIC_IRQChannelCmd=ENABLE;//同上
 	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority=1;//同上
 	NVIC_InitStruct.NVIC_IRQChannelSubPriority=2;//同上
@@ -61,25 +61,29 @@ void EXTIX_Init()
 //led1 为F9
 //led2 为F10
 
-void EXTI2_IRQHandler(void)
+void EXTI0_IRQHandler(void)
 {
-	delay_ms(20);
-	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_2)==0)  //这个判断设置的原因是消抖之后再进行电平变化判断，这样就不会误判了
+	
+	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_0)==0)  //这个判断设置的原因是消抖之后再进行电平变化判断，这样就不会误判了
 	{
-	GPIO_ToggleBits(GPIOF,GPIO_Pin_9);
+		delay_ms(20);
+		if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_0)==0) 
+		{GPIO_ToggleBits(GPIOF,GPIO_Pin_9);}
 	}
-	EXTI_ClearITPendingBit(EXTI_Line2);
+	EXTI_ClearITPendingBit(EXTI_Line0);
 }
 
-void EXTI3_IRQHandler(void)
+void EXTI1_IRQHandler(void)
 {
-	delay_ms(20);
-	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_3)==0)
+	
+	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_1)==0)
 	{
-	GPIO_ToggleBits(GPIOF,GPIO_Pin_10);
+		delay_ms(20);
+		if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_1)==0)
+		{GPIO_ToggleBits(GPIOF,GPIO_Pin_10);}
 	}
 
-	EXTI_ClearITPendingBit(EXTI_Line3);
+	EXTI_ClearITPendingBit(EXTI_Line1);
 }
 
 

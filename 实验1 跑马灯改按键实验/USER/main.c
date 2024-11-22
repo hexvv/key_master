@@ -16,12 +16,14 @@ int main(void)
 	while(1)
 	{
 		delay_ms(50);
-		NUM=KeynumGet();     //
+		NUM=KeynumGet(); 
 		
 		if(NUM==1)
 		{
+			delay_ms(10);
+			if(NUM==1)
 			LED_Turn();
-			delay_ms(500);
+			delay_ms(50);
 		}
 		else
 		{}

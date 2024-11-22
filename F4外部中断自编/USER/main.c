@@ -8,7 +8,7 @@
 
 int main()
 {
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_3);
 	LED_Init();
 	KEY_Init();
 	EXTIX_Init();
